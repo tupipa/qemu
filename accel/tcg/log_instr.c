@@ -738,7 +738,8 @@ void qemu_log_instr_mode_switch(CPUArchState *env,
     cpu_log_instr_state_t *cpulog = get_cpu_log_state(env);
     cpu_log_instr_info_t *iinfo = get_cpu_log_instr_info(env);
 
-    log_assert(cpulog != NULL && "Invalid log info");
+    log_assert(cpulog != NULL && "Invalid log state");
+    log_assert(iinfo != NULL && "Invalid log info");
 
     iinfo->flags |= LI_FLAG_MODE_SWITCH;
     iinfo->next_cpu_mode = mode;
