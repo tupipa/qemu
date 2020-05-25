@@ -522,6 +522,7 @@ const mips_def_t mips_defs[] =
         /* Note: Config1 is only used internally, the R4000 has only Config0. */
 #if defined(TARGET_CHERI)
         .CP0_Config1 = (1 << CP0C1_FP) | (47 << CP0C1_MMU) | (1 << CP0C1_C2),
+        .CP0_Config3 = MIPS_CONFIG3 | (1 << CP0C3_MT),
 #else
         .CP0_Config1 = (1 << CP0C1_FP) | (47 << CP0C1_MMU),
 #endif
@@ -549,10 +550,11 @@ const mips_def_t mips_defs[] =
         .SEGBITS = 40,
 #if defined(TARGET_CHERI)
         .PABITS = 40,
+        .insn_flags = CPU_MIPS3 | CPU_MIPS64R2 | ASE_MT,
 #else
         .PABITS = 36,
-#endif
         .insn_flags = CPU_MIPS3,
+#endif
         .mmu_type = MMU_TYPE_R4000,
     },
     {
@@ -616,7 +618,7 @@ const mips_def_t mips_defs[] =
         .CP0_Config2 = MIPS_CONFIG2,
 #if defined(TARGET_CHERI)
         .CP0_Config3 = MIPS_CONFIG3 | (1 << CP0C3_ULRI) | (1 << CP0C3_BI) |
-                       (1 << CP0C3_BP),
+                       (1 << CP0C3_BP) | (1 << CP0C3_MT),
 #else
         .CP0_Config3 = MIPS_CONFIG3,
 #endif
@@ -645,7 +647,7 @@ const mips_def_t mips_defs[] =
         .SEGBITS = 42,
         .PABITS = 36,
 #if defined(TARGET_CHERI)
-        .insn_flags = CPU_MIPS64R2,
+        .insn_flags = CPU_MIPS64R2 | ASE_MT,
 #else
         .insn_flags = CPU_MIPS64,
 #endif
@@ -667,7 +669,7 @@ const mips_def_t mips_defs[] =
                        (1 << CP0C1_PC) | (1 << CP0C1_WR) | (1 << CP0C1_EP),
         .CP0_Config2 = MIPS_CONFIG2,
         .CP0_Config3 = MIPS_CONFIG3 | (1 << CP0C3_ULRI) | (1 << CP0C3_BI) |
-                       (1 << CP0C3_BP) | (1 << CP0C3_LPA),
+                       (1 << CP0C3_BP) | (1 << CP0C3_LPA) | (1 << CP0C3_MT),
         .CP0_LLAddr_rw_bitmask = 0,
         .CP0_LLAddr_shift = 0,
         .SYNCI_Step = 32,
@@ -687,7 +689,7 @@ const mips_def_t mips_defs[] =
         /* These flags are needed in addition to Config3.LPA for > 36 bits PA */
         .CP0_PageGrain = (1 << CP0PG_ELPA),
         .CP0_PageGrain_rw_bitmask = (1 << CP0PG_ELPA), /* TODO: should it be R/W? */
-        .insn_flags = CPU_MIPS64R2,
+        .insn_flags = CPU_MIPS64R2 | ASE_MT,
         .mmu_type = MMU_TYPE_R4000,
     },
     {
