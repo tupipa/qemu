@@ -1181,6 +1181,11 @@ struct CPUMIPSState {
 #define MIPS_HFLAG_ERL   0x10000000 /* error level flag */
 #ifdef TARGET_CHERI
 #define MIPS_HFLAG_COP2X 0x20000000 /* CHERI/CP2 enabled              */
+
+    target_ulong cheri_gc_lo;
+    target_ulong cheri_gc_hi;
+    target_ulong cheri_gc_perms;
+
 #endif /* TARGET_CHERI */
     target_ulong btarget;        /* Jump / branch target               */
     target_ulong bcond;          /* Branch condition (if needed)       */
@@ -1219,6 +1224,7 @@ struct CPUMIPSState {
 #define MASK_CCALL_SEL(op)  ((op) & 0x7ff)
 #define CCALL_SELECTOR_0 (0x0)
 #define CCALL_SELECTOR_1 (0x01)
+#define CCALL_SELECTOR_2 (0x02)
 #define CCALL_SELECTOR_CRETURN (0x7ff)
 
 #endif /* TARGET_CHERI */

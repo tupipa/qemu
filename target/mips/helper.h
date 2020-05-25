@@ -213,6 +213,7 @@ DEF_HELPER_3(cbts, tl, env, i32, i32)
 DEF_HELPER_3(cbtu, tl, env, i32, i32)
 DEF_HELPER_3(ccall, void, env, i32, i32)
 DEF_HELPER_3(ccall_notrap, tl, env, i32, i32)
+DEF_HELPER_3(ccall_notrap2, tl, env, i32, i32)
 DEF_HELPER_2(cclearreg, void, env, i32)
 DEF_HELPER_1(cgetcause, tl, env)
 DEF_HELPER_2(cgetpcc, void, env, i32)
@@ -247,6 +248,12 @@ DEF_HELPER_3(cstorecond, cap_checked_ptr, env, i32, i32)
 
 DEF_HELPER_3(cscc_without_tcg, tl, env, i32, i32)
 DEF_HELPER_3(cllc_without_tcg, void, env, i32, i32)
+
+DEF_HELPER_2(mtc0_gc_lo, void, env, tl)
+DEF_HELPER_2(mtc0_gc_hi, void, env, tl)
+DEF_HELPER_2(mtc0_gc_perms, void, env, tl)
+
+DEF_HELPER_1(smp_yield, void, env)
 #endif
 
 #if defined(TARGET_MIPS64)
