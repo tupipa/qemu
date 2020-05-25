@@ -56,6 +56,7 @@
 #include "sysemu/kvm.h"
 #include "hw/semihosting/semihost.h"
 #include "hw/mips/cps.h"
+#include "hw/virtio/virtio-mmio.h"
 
 #if defined(TARGET_CHERI)
 #include "cheri_tagmem.h"
@@ -69,6 +70,13 @@
 #define FLASH_ADDRESS       0x1e000000ULL
 #define FPGA_ADDRESS        0x1f000000ULL
 #define RESET_ADDRESS       0x1fc00000ULL
+
+// Maximum number of virtio transports. These sit idle if no devices are specified when QEMU is run.
+#define VIRTIO_N_TRANSPORTS    2
+
+#define VIRTIO_MMIO_MMAP_BASE     0x1e400000ULL
+#define VIRTIO_MMIO_MMAP_SIZE     0x200ULL
+#define VIRTIO_MMIO_IRQ_START     5
 
 #define FLASH_SIZE          0x400000
 
@@ -1220,6 +1228,24 @@ static void mips_create_cpu(MachineState *ms, MaltaState *s,
     }
 }
 
+static void create_virtio_devices(void)
+{
+    CPUMIPSState *env;
+    MIPSCPU *cpu;
+
+    cpu = MIPS_CPU(first_cpu);
+    env = &cpu->env;
+    for(int i = VIRTIO_N_TRANSPORTS-1; i >= 0; i--) {
+        DeviceState* dev = sysbus_create_simple(TYPE_VIRTIO_MMIO,
+            VIRTIO_MMIO_MMAP_BASE+(VIRTIO_MMIO_MMAP_SIZE*i),
+            env->irq[VIRTIO_MMIO_IRQ_START+i]);
+
+        // This seems to breaking encapsulation a bit, but I cannot find an accessor...
+        VirtIOMMIOProxy *mmio = VIRTIO_MMIO(OBJECT(dev));
+        mmio->legacy = 0;
+    }
+}
+
 static
 void mips_malta_init(MachineState *machine)
 {
@@ -1261,6 +1287,10 @@ void mips_malta_init(MachineState *machine)
 
     /* create CPU */
     mips_create_cpu(machine, s, &cbus_irq, &i8259_irq);
+
+#ifdef CONFIG_TCG_LOG_INSTR
+  qemu_log_instr_init(first_cpu);
+#endif
 
     /* allocate RAM */
     if (ram_size > 2 * GiB) {
@@ -1438,6 +1468,9 @@ void mips_malta_init(MachineState *machine)
 
     /* Optional PCI video card */
     pci_vga_init(pci_bus);
+
+    /* Virtio over MMIO */
+    create_virtio_devices();
 }
 
 static const TypeInfo mips_malta_device = {
