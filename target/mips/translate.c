@@ -4381,11 +4381,13 @@ static void gen_logic_imm(DisasContext *ctx, uint32_t opc,
                 gen_helper_magic_library_function(cpu_env, cpu_gpr[3]);
             }
 
+#if defined(TARGET_CHERI)
             /* With 'li $0, 0xea1d' perform smp yield. */
             if ((uint16_t)imm == 0xea1d) {
                 gen_save_pc(ctx->base.pc_next + 4);
                 gen_helper_smp_yield(cpu_env);
             }
+#endif
 
         }
 #endif /* CONFIG_TCG_LOG_INSTR */
