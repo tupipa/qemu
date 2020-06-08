@@ -1288,10 +1288,6 @@ void mips_malta_init(MachineState *machine)
     /* create CPU */
     mips_create_cpu(machine, s, &cbus_irq, &i8259_irq);
 
-#ifdef CONFIG_TCG_LOG_INSTR
-  qemu_log_instr_init(first_cpu);
-#endif
-
     /* allocate RAM */
     if (ram_size > 2 * GiB) {
         error_report("Too much memory for this machine: %" PRId64 "MB,"
