@@ -317,9 +317,8 @@ static inline target_ulong get_capreg_tag(CPUArchState *env, unsigned regnum)
     tcg_abort();
 }
 
-#ifdef TARGET_MIPS
-
 static inline target_ulong get_capreg_tag_revokable(CPUArchState *env, unsigned regnum) {
+#ifdef TARGET_MIPS
     target_ulong tagged = get_capreg_tag(env, regnum);
 
     // Try avoid decompress if at all possible
@@ -334,15 +333,10 @@ static inline target_ulong get_capreg_tag_revokable(CPUArchState *env, unsigned 
       return 0;
 
     return tagged;
-}
-
 #else
-
-static inline target_ulong get_capreg_tag_revokable(CPUArchState *env, unsigned regnum) {
     return get_capreg_tag(env, regnum);
-}
-
 #endif
+}
 
 static inline uint32_t get_capreg_hwperms(CPUArchState *env, unsigned regnum)
 {
