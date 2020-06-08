@@ -253,8 +253,9 @@ DEF_HELPER_2(mtc0_gc_lo, void, env, tl)
 DEF_HELPER_2(mtc0_gc_hi, void, env, tl)
 DEF_HELPER_2(mtc0_gc_perms, void, env, tl)
 
-DEF_HELPER_1(smp_yield, void, env)
 #endif
+
+DEF_HELPER_1(smp_yield, void, env)
 
 #if defined(TARGET_MIPS64)
 DEF_HELPER_2(dmtc0_entrylo0, void, env, i64)

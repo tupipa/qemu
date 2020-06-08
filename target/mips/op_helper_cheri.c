@@ -209,7 +209,7 @@ static target_ulong ccall_common(CPUArchState *env, uint32_t cs, uint32_t cb, ui
     const cap_register_t *csp = get_readonly_capreg(env, cs);
     const cap_register_t *cbp = get_readonly_capreg(env, cb);
 
-    int allow_unsealed = (selector == CCALL_SELECTOR_2) && !cap_is_sealed_with_type(csp);
+    int allow_unsealed = (selector == CCALL_SELECTOR_2) && cap_is_unsealed(csp);
     /*
      * CCall: Call into a new security domain
      */
@@ -1217,11 +1217,4 @@ void CHERI_HELPER_IMPL(mtc2_dumpcstate(CPUArchState *env, target_ulong arg1))
     cheri_dump_state(env_cpu(env), logfile, fprintf, CPU_DUMP_CODE);
     if (logfile != stderr)
         qemu_log_unlock(logfile);
-}
-
-void helper_smp_yield(CPUMIPSState *env) {
-    CPUState *cs = env_cpu(env);
-    cs->exception_index = EXCP_YIELD;
-
-    cpu_loop_exit(cs);
 }
